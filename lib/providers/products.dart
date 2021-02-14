@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:shop/data/dummy_data.dart';
 import 'package:shop/providers/product.dart';
@@ -7,30 +9,40 @@ class Products with ChangeNotifier {
 
   List<Product> get items => [..._items];
 
+  int get itemsCount => _items.length;
+
   List<Product> get favoriteItems =>
       _items.where((prod) => prod.isFavorite).toList();
 
-  void addProduct(Product product) {
-    _items.add(product);
+  void addProduct(Product newProduct) {
+    _items.add(
+      Product(
+        id: Random().nextDouble().toString(),
+        title: newProduct.title,
+        price: newProduct.price,
+        description: newProduct.description,
+        imageUrl: newProduct.imageUrl,
+      ),
+    );
     notifyListeners();
   }
 
-  // bool _showFavoriteOnly = false;
+  void updateProduct(Product product) {
+    if (product == null && product.id == null) return;
 
-  // List<Product> get items {
-  //   if (_showFavoriteOnly) {
-  //     return _items.where((prod) => prod.isFavorite).toList();
-  //   }
-  //   return [..._items];
-  // }
+    final index = _items.indexWhere((prod) => prod.id == product.id);
+    if (index >= 0) {
+      _items[index] = product;
+      notifyListeners();
+    }
+  }
 
-  // void showFavoriteOnly() {
-  //   _showFavoriteOnly = true;
-  //   notifyListeners();
-  // }
+  void deleteProduct(String id) {
+    final index = _items.indexWhere((prod) => prod.id == id);
 
-  // void showAll() {
-  //   _showFavoriteOnly = false;
-  //   notifyListeners();
-  // }
+    if (index >= 0) {
+      _items.removeWhere((prod) => prod.id == id);
+      notifyListeners();
+    }
+  }
 }
