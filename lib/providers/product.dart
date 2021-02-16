@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop/utils/constants.dart';
 
 class Product with ChangeNotifier {
-  final String _baseUrl =
-      'https://shop-1038f-default-rtdb.firebaseio.com/products';
+  final String _baseUrl = '${Constants.BASE_API_URL}/products';
 
   final String id;
   final String title;
