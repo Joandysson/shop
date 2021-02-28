@@ -5,8 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:shop/utils/constants.dart';
 
 class Product with ChangeNotifier {
-  final String _baseUrl = '${Constants.BASE_API_URL}/products';
-
   final String id;
   final String title;
   final String description;
@@ -28,11 +26,11 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleFavorite() async {
+  Future<void> toggleFavorite(String token) async {
     _toggleFavorite();
     try {
       final response = await http.patch(
-        '$_baseUrl/$id.json',
+        '${Constants.BASE_API_URL}/products/$id.json?auth=$token',
         body: json.encode({
           'isFavorite': isFavorite,
         }),
