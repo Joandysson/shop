@@ -17,15 +17,21 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider.Auth()),
         ChangeNotifierProxyProvider<AuthProvider.Auth,
             ProductsProvider.Products>(
-          update: (ctx, auth, previousProducts) =>
-              ProductsProvider.Products(auth.token, previousProducts.items),
-          create: (_) => ProductsProvider.Products(null, []),
+          update: (ctx, auth, previousProducts) => ProductsProvider.Products(
+            auth.token,
+            previousProducts.items,
+            auth.userId,
+          ),
+          create: (_) => ProductsProvider.Products(),
         ),
         ChangeNotifierProvider(create: (_) => CartProvider.Cart()),
         ChangeNotifierProxyProvider<AuthProvider.Auth, OrderProvider.Orders>(
-            create: (_) => OrderProvider.Orders(null, []),
-            update: (ctx, auth, previousOrders) =>
-                OrderProvider.Orders(auth.token, previousOrders.items)),
+            create: (_) => OrderProvider.Orders(),
+            update: (ctx, auth, previousOrders) => OrderProvider.Orders(
+                  auth.token,
+                  previousOrders.items,
+                  auth.userId,
+                )),
       ],
       child: MaterialApp(
         title: 'Minha Loja',

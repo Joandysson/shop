@@ -9,8 +9,9 @@ class Products with ChangeNotifier {
   final String _baseUrl = '${Constants.BASE_API_URL}/products';
   List<Product> _items = [];
   String _token;
+  String _userId;
 
-  Products(this._token, this._items);
+  Products([this._token, this._items = const [], this._userId]);
 
   List<Product> get items => [..._items];
 
@@ -20,11 +21,18 @@ class Products with ChangeNotifier {
       _items.where((prod) => prod.isFavorite).toList();
 
   Future<void> loadProducts() async {
-    _items.clear();
-
     final response = await http.get('$_baseUrl.json?auth=$_token');
     Map<String, dynamic> data = json.decode(response.body);
+
+    final favResponse = await http
+        .get('${Constants.BASE_API_URL}/favorites/$_userId.json?auth=$_token');
+
+    final favMap = json.decode(favResponse.body);
+
+    _items.clear();
     data.forEach((productId, productData) {
+      final isFavorite = favMap == null ? false : favMap[productId] ?? false;
+
       _items.add(
         Product(
           id: productId,
@@ -32,7 +40,7 @@ class Products with ChangeNotifier {
           price: productData['price'],
           description: productData['description'],
           imageUrl: productData['imageUrl'],
-          isFavorite: productData['isFavorite'],
+          isFavorite: isFavorite,
         ),
       );
     });
@@ -48,7 +56,6 @@ class Products with ChangeNotifier {
         'description': newProduct.description,
         'price': newProduct.price,
         'imageUrl': newProduct.imageUrl,
-        'isFavorite': newProduct.isFavorite,
       }),
     );
 
