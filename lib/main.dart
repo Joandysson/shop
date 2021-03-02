@@ -6,6 +6,7 @@ import 'package:shop/providers/orders.dart' as OrderProvider;
 import 'package:shop/providers/products.dart' as ProductsProvider;
 import 'package:shop/providers/auth.dart' as AuthProvider;
 import 'package:shop/routes.dart';
+import 'package:shop/utils/custom_route.dart';
 
 void main() => runApp(MyApp());
 
@@ -39,6 +40,12 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.purple,
           accentColor: Colors.deepOrange,
           fontFamily: 'Lato',
+          pageTransitionsTheme: PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: CustomRoutePageTransitionsBuilder(),
+              TargetPlatform.iOS: CustomRoutePageTransitionsBuilder(),
+            },
+          ),
         ),
         // home: ProductOverView(),
         routes: routes,

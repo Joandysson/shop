@@ -15,31 +15,35 @@ class _OrderState extends State<Order> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(10),
-      child: Column(
-        children: [
-          ListTile(
-            title: Text('R\$ ${widget.order.total.toStringAsFixed(2)}'),
-            subtitle: Text(
-              DateFormat('dd/MM/yyyy hh:mm').format(widget.order.date),
+    final itemsHeight = (widget.order.products.length * 25.0) + 10;
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 300),
+      height: _expended ? itemsHeight + 92 : 92,
+      child: Card(
+        margin: EdgeInsets.all(10),
+        child: Column(
+          children: [
+            ListTile(
+              title: Text('R\$ ${widget.order.total.toStringAsFixed(2)}'),
+              subtitle: Text(
+                DateFormat('dd/MM/yyyy hh:mm').format(widget.order.date),
+              ),
+              trailing: IconButton(
+                icon: Icon(Icons.expand_more),
+                onPressed: () {
+                  setState(() {
+                    _expended = !_expended;
+                  });
+                },
+              ),
             ),
-            trailing: IconButton(
-              icon: Icon(Icons.expand_more),
-              onPressed: () {
-                setState(() {
-                  _expended = !_expended;
-                });
-              },
-            ),
-          ),
-          if (_expended)
-            Container(
+            AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              height: _expended ? itemsHeight : 0,
               padding: EdgeInsets.symmetric(
                 horizontal: 15,
                 vertical: 4,
               ),
-              height: (widget.order.products.length * 25.0) + 10,
               child: ListView(
                 children: widget.order.products.map(
                   (product) {
@@ -66,7 +70,8 @@ class _OrderState extends State<Order> {
                 ).toList(),
               ),
             ),
-        ],
+          ],
+        ),
       ),
     );
   }
